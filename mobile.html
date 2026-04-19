@@ -160,7 +160,7 @@ canvas{display:block;touch-action:none;cursor:crosshair;image-rendering:pixelate
       <button class="tbtn" data-type="cannon"><span class="te">💣</span><span class="tl">광역 포탑</span><span class="cost">100G</span></button>
       <button class="tbtn" data-type="ice"><span class="te">❄️</span><span class="tl">냉동 포탑</span><span class="cost">80G</span></button>
       <button class="tbtn" data-type="summoner" id="summoner-btn"><span class="te">🧙</span><span class="tl">사령관</span><span class="limit-badge" id="summoner-badge">0/6</span><span class="cost">400G</span></button>
-      <button class="tbtn" data-type="sword" id="sword-btn"><span class="te">⚔</span><span class="tl">암살자</span><span class="limit-badge" id="sword-badge">0/3</span><span class="cost">350G</span></button>
+      <button class="tbtn" data-type="sword" id="sword-btn"><span class="te">⚔</span><span class="tl">근거리 포탑</span><span class="limit-badge" id="sword-badge">0/3</span><span class="cost">350G</span></button>
       <button class="tbtn" data-type="wall"><span class="te">🏰</span><span class="tl">성벽</span><span class="cost">20G</span></button>
     </div>
   </div>
@@ -237,7 +237,7 @@ const BASE={
   cannon:{label:'광역 포탑',emoji:'💣',color:'#D85A30',rc:'rgba(216,90,48,0.13)',rb:'rgba(216,90,48,0.55)',cost:100},
   ice:{label:'냉동 포탑',emoji:'❄️',color:'#1D9E75',rc:'rgba(29,158,117,0.13)',rb:'rgba(29,158,117,0.55)',cost:80},
   summoner:{label:'사령관',emoji:'🧙',color:'#7F77DD',rc:'rgba(127,119,221,0.13)',rb:'rgba(127,119,221,0.55)',cost:400},
-  sword:{label:'암살자',emoji:'⚔',color:'#BA7517',rc:'rgba(186,117,23,0.13)',rb:'rgba(186,117,23,0.55)',cost:350},
+  sword:{label:'근거리 포탑',emoji:'⚔',color:'#BA7517',rc:'rgba(186,117,23,0.13)',rb:'rgba(186,117,23,0.55)',cost:350},
   wall:{label:'성벽',emoji:'🏰',color:'#888780',rc:'rgba(136,135,128,0.13)',rb:'rgba(136,135,128,0.55)',cost:20},
 };
 const STATS={
@@ -368,7 +368,7 @@ function drawGolemBullets(){for(const b of S.golemBullets){const tgt=S.enemies.f
 function drawBoss(e){const ph=getBossPhase(e),phIdx=e.phase||0,r=24+phIdx*3;for(const p of e.particles){ctx.save();ctx.globalAlpha=p.life*0.45;ctx.fillStyle=p.phase===2?'#E24B4A':p.phase===1?'#BA7517':'#F7C1C1';ctx.beginPath();ctx.arc(p.x,p.y,p.r*p.life,0,Math.PI*2);ctx.fill();ctx.restore();}const pulse=0.7+0.3*Math.sin(Date.now()/150);ctx.save();ctx.globalAlpha=0.45*pulse;ctx.fillStyle=ph.color;ctx.beginPath();ctx.arc(e.x,e.y,r+12+phIdx*4,0,Math.PI*2);ctx.fill();ctx.restore();const sc2=8+phIdx*4;ctx.save();ctx.fillStyle=phIdx===2?'#2C2C2A':phIdx===1?'#501313':'#791F1F';ctx.shadowColor=ph.color;ctx.shadowBlur=8;for(let i=0;i<sc2;i++){const a=i/sc2*Math.PI*2+(Date.now()/2000);ctx.beginPath();ctx.arc(e.x+Math.cos(a)*(r+6),e.y+Math.sin(a)*(r+6),4+phIdx,0,Math.PI*2);ctx.fill();}ctx.restore();ctx.save();ctx.fillStyle='rgba(0,0,0,0.5)';ctx.beginPath();ctx.ellipse(e.x,e.y+r-2,r*0.85,r*0.25,0,0,Math.PI*2);ctx.fill();ctx.restore();const bsz=r*2.5+phIdx*5;const bossSp=enemySprite(e);if(bossSp){ctx.drawImage(bossSp,e.x-bsz/2,e.y-bsz/2,bsz,bsz);}else{ctx.fillStyle=ph.color;ctx.beginPath();ctx.arc(e.x,e.y,r,0,Math.PI*2);ctx.fill();}ctx.fillStyle=phIdx===2?'#F09595':phIdx===1?'#EF9F27':'#F7C1C1';ctx.font='700 10px sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';ctx.shadowColor='rgba(0,0,0,0.7)';ctx.shadowBlur=4;ctx.fillText(ph.label,e.x,e.y-r-16);const defPct=Math.round((1-ph.defMult)*100);ctx.fillStyle='rgba(255,255,255,0.7)';ctx.font='9px sans-serif';ctx.fillText(`🛡${defPct}%`,e.x,e.y-r-28);ctx.shadowBlur=0;const bw=80,bh=8,bx=e.x-40,by=e.y-r-44;ctx.fillStyle='rgba(0,0,0,0.6)';ctx.fillRect(bx,by,bw,bh);const hf=e.hp/e.mhp,bc=hf>0.66?'#5dffb4':hf>0.33?'#ffd166':'#ff5470';ctx.fillStyle=bc;ctx.fillRect(bx,by,bw*hf,bh);ctx.strokeStyle='rgba(255,255,255,0.2)';ctx.lineWidth=0.5;ctx.strokeRect(bx,by,bw,bh);ctx.fillStyle='#fff';ctx.font='700 9px sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(`${Math.max(0,Math.round(e.hp)).toLocaleString()}/${e.mhp.toLocaleString()}`,e.x,by+bh/2);}
 function eRad(e){return e.kind==='armored'?14:e.kind==='elite'?13:e.kind==='swarm'?7:10;}
 function eCol(e){if(e.hf>0)return '#fff';if(e.st>0&&!e.slowImmune)return '#5DCAA5';return e.color;}
-function drawEnemy(e){if(e.boss){drawBoss(e);return;}const r=eRad(e);const sp=enemySprite(e);if(sp){const sz=e.kind==='swarm'?26:e.kind==='armored'?34:e.kind==='elite'?34:30;if(e.st>0&&!e.slowImmune){ctx.save();ctx.fillStyle='rgba(120,210,255,0.5)';ctx.shadowColor='rgba(120,210,255,0.8)';ctx.shadowBlur=8;ctx.beginPath();ctx.arc(e.x,e.y,r+4,0,Math.PI*2);ctx.fill();ctx.restore();}ctx.save();ctx.fillStyle='rgba(0,0,0,0.3)';ctx.beginPath();ctx.ellipse(e.x,e.y+r-2,r*0.6,r*0.22,0,0,Math.PI*2);ctx.fill();ctx.restore();ctx.drawImage(sp,e.x-sz/2,e.y-sz/2,sz,sz);if(e.hf>0){ctx.save();ctx.globalAlpha=Math.min(1,e.hf*6);ctx.globalCompositeOperation='lighter';ctx.fillStyle='#fff';ctx.beginPath();ctx.arc(e.x,e.y,r*0.95,0,Math.PI*2);ctx.fill();ctx.restore();}}else{ctx.fillStyle=eCol(e);if(e.kind==='armored'){ctx.save();ctx.beginPath();for(let i=0;i<6;i++){const a=i/6*Math.PI*2-Math.PI/6;ctx.lineTo(e.x+Math.cos(a)*r,e.y+Math.sin(a)*r);}ctx.closePath();ctx.fill();ctx.restore();}else if(e.kind==='swarm'){ctx.save();ctx.beginPath();ctx.moveTo(e.x,e.y-r);ctx.lineTo(e.x+r,e.y);ctx.lineTo(e.x,e.y+r);ctx.lineTo(e.x-r,e.y);ctx.closePath();ctx.fill();ctx.restore();}else{ctx.beginPath();ctx.arc(e.x,e.y,r,0,Math.PI*2);ctx.fill();}}const bw=r*2+4,bx=e.x-bw/2,by=e.y-(r+8);ctx.fillStyle='rgba(0,0,0,0.55)';ctx.fillRect(bx,by,bw,3);ctx.fillStyle=e.kind==='armored'?'#c8c8c8':e.kind==='elite'?'#a060e0':e.kind==='swarm'?'#ffaa20':'#3bb04b';ctx.fillRect(bx,by,bw*(e.hp/e.mhp),3);}
+function drawEnemy(e){if(e.boss){drawBoss(e);return;}const r=eRad(e);const sp=enemySprite(e);const isFlying=e.kind==='armored';const bp=(Date.now()+(e.id||0)*1000)/(isFlying?440:680);const dy=isFlying?Math.sin(bp*Math.PI*2)*3:-Math.abs(Math.sin(bp*Math.PI))*8;const ey=e.y+dy;const shadowS=isFlying?1:Math.max(0.55,1-Math.abs(dy)/12);if(sp){const sz=e.kind==='swarm'?26:e.kind==='armored'?34:e.kind==='elite'?34:30;if(e.st>0&&!e.slowImmune){ctx.save();ctx.fillStyle='rgba(120,210,255,0.5)';ctx.shadowColor='rgba(120,210,255,0.8)';ctx.shadowBlur=8;ctx.beginPath();ctx.arc(e.x,ey,r+4,0,Math.PI*2);ctx.fill();ctx.restore();}ctx.save();ctx.fillStyle='rgba(0,0,0,'+(0.3*shadowS)+')';ctx.beginPath();ctx.ellipse(e.x,e.y+r-2,r*0.6*shadowS,r*0.22*shadowS,0,0,Math.PI*2);ctx.fill();ctx.restore();ctx.drawImage(sp,e.x-sz/2,ey-sz/2,sz,sz);if(e.hf>0){ctx.save();ctx.globalAlpha=Math.min(1,e.hf*6);ctx.globalCompositeOperation='lighter';ctx.fillStyle='#fff';ctx.beginPath();ctx.arc(e.x,ey,r*0.95,0,Math.PI*2);ctx.fill();ctx.restore();}}else{ctx.fillStyle=eCol(e);ctx.beginPath();ctx.arc(e.x,ey,r,0,Math.PI*2);ctx.fill();}const bw=r*2+4,bx=e.x-bw/2,by=ey-(r+8);ctx.fillStyle='rgba(0,0,0,0.55)';ctx.fillRect(bx,by,bw,3);ctx.fillStyle=e.kind==='armored'?'#ffd166':e.kind==='elite'?'#5da7ff':e.kind==='swarm'?'#ff80c0':'#5dffb4';ctx.fillRect(bx,by,bw*(e.hp/e.mhp),3);}
 function drawFX(){for(const e of S.explosions){if(e.type==='flash'){ctx.save();const g=ctx.createRadialGradient(e.x,e.y,0,e.x,e.y,e.r);g.addColorStop(0,`rgba(255,220,100,${e.life*0.8})`);g.addColorStop(0.4,`rgba(216,90,48,${e.life*0.5})`);g.addColorStop(1,'rgba(0,0,0,0)');ctx.fillStyle=g;ctx.beginPath();ctx.arc(e.x,e.y,e.r,0,Math.PI*2);ctx.fill();ctx.restore();}else if(e.type==='ring'){const p=1-e.life,cr=e.r*p;ctx.save();ctx.strokeStyle=e.boss?`rgba(160,45,45,${e.life*0.9})`:e.stone?`rgba(136,135,128,${e.life*0.8})`:`rgba(216,90,48,${e.life*0.8})`;ctx.lineWidth=e.boss?3*(1-p)+1:1.5*(1-p)+0.5;ctx.beginPath();ctx.arc(e.x,e.y,cr,0,Math.PI*2);ctx.stroke();ctx.restore();}else{for(const p of e.ps){if(p.life<=0)continue;ctx.save();ctx.globalAlpha=Math.max(0,p.life);ctx.fillStyle=p.color;ctx.beginPath();ctx.arc(p.x,p.y,p.r*p.life,0,Math.PI*2);ctx.fill();ctx.restore();}}}for(const s of S.slashFX){ctx.save();ctx.globalAlpha=s.life*0.7;ctx.strokeStyle=`rgba(239,159,39,${s.life})`;ctx.lineWidth=3+s.life*4;ctx.lineCap='round';ctx.beginPath();ctx.arc(s.x,s.y,s.radius*0.65,s.startAngle,s.endAngle);ctx.stroke();ctx.restore();}}
 
 function draw(){
@@ -432,11 +432,11 @@ function handleCanvasClick(cx,cy){
   }
   if(S.placing){
     if(!canPlace(S.placing,c,rr)){
-      if(CLIFF_SET.has(`${c},${rr}`)&&S.placing==='sword')setMsg('🪨 절벽엔 암살자를 설치할 수 없어요!');
+      if(CLIFF_SET.has(`${c},${rr}`)&&S.placing==='sword')setMsg('🪨 절벽엔 근거리 포탑를 설치할 수 없어요!');
       else if(PATH_SET.has(`${c},${rr}`))setMsg('경로 위에는 타워를 지을 수 없어요.');
       else setMsg('여기엔 설치할 수 없어요.');return;
     }
-    if(S.placing==='sword'&&tCount('sword')>=SWORD_LIMIT){setMsg(`암살자는 최대 ${SWORD_LIMIT}개까지 설치할 수 있어요.`);return;}
+    if(S.placing==='sword'&&tCount('sword')>=SWORD_LIMIT){setMsg(`근거리 포탑는 최대 ${SWORD_LIMIT}개까지 설치할 수 있어요.`);return;}
     if(S.placing==='summoner'&&tCount('summoner')>=SUMMONER_LIMIT){setMsg(`사령관은 최대 ${SUMMONER_LIMIT}개까지 설치할 수 있어요.`);return;}
     const b=BASE[S.placing];if(S.gold<b.cost){setMsg(`골드 부족 (${b.cost}G)`);return;}
     S.gold-=b.cost;
@@ -475,7 +475,7 @@ canvas.addEventListener('touchcancel',()=>{S.hc=null;_ts=null;});
 window.addEventListener('keydown',e=>{if((e.key==='e'||e.key==='E')&&!S.over&&S.sel){e.preventDefault();doUpgrade();}});
 
 document.querySelectorAll('.tbtn[data-type]').forEach(btn=>{btn.addEventListener('click',()=>{
-  if(btn.dataset.type==='sword'&&tCount('sword')>=SWORD_LIMIT){setMsg(`암살자는 최대 ${SWORD_LIMIT}개까지 설치할 수 있어요.`);return;}
+  if(btn.dataset.type==='sword'&&tCount('sword')>=SWORD_LIMIT){setMsg(`근거리 포탑는 최대 ${SWORD_LIMIT}개까지 설치할 수 있어요.`);return;}
   if(btn.dataset.type==='summoner'&&tCount('summoner')>=SUMMONER_LIMIT){setMsg(`사령관은 최대 ${SUMMONER_LIMIT}개까지 설치할 수 있어요.`);return;}
   document.querySelectorAll('.tbtn').forEach(b=>b.classList.remove('sel'));
   btn.classList.add('sel');S.placing=btn.dataset.type;S.sel=null;
