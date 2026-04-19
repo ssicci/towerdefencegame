@@ -15,17 +15,35 @@
 }
 *{box-sizing:border-box;margin:0;padding:0;}
 html,body{height:100%;overflow:hidden;background:#e8e8e0;-webkit-tap-highlight-color:transparent;}
-#gc-wrap{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;user-select:none;display:flex;flex-direction:column;height:100dvh;height:100vh;overflow:hidden;}
-#top-bar{display:flex;align-items:center;gap:8px;padding:7px 10px;background:var(--color-bg2);border-bottom:0.5px solid var(--color-border);flex-shrink:0;}
+#gc-wrap{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;user-select:none;display:grid;grid-template-areas:"top" "canvas" "panel";grid-template-rows:auto 1fr auto;grid-template-columns:1fr;height:100dvh;height:100vh;overflow:hidden;}
+#top-bar{grid-area:top;display:flex;align-items:center;gap:8px;padding:7px 10px;background:var(--color-bg2);border-bottom:0.5px solid var(--color-border);}
 .stat{display:flex;align-items:center;gap:3px;font-size:12px;color:var(--color-txt2);}
 .stat strong{font-size:14px;font-weight:600;color:var(--color-txt);min-width:22px;}
 #wave-bar-wrap{flex:1;min-width:50px;}
 #wave-label{font-size:10px;color:var(--color-txt2);margin-bottom:2px;}
 #wave-track{height:4px;background:var(--color-bg);border-radius:2px;border:0.5px solid var(--color-border);overflow:hidden;}
 #wave-fill{height:100%;border-radius:2px;background:#378ADD;transition:width 0.3s;}
-#cw{position:relative;flex:1;min-height:0;overflow:hidden;display:flex;align-items:flex-start;justify-content:center;}
-canvas{display:block;width:100%;height:auto;touch-action:none;cursor:crosshair;image-rendering:pixelated;image-rendering:crisp-edges;}
-#bottom-panel{flex-shrink:0;background:var(--color-bg);border-top:0.5px solid var(--color-border);padding:8px 10px;padding-bottom:max(8px,env(safe-area-inset-bottom));}
+#cw{grid-area:canvas;position:relative;min-height:0;min-width:0;overflow:hidden;display:flex;align-items:center;justify-content:center;}
+canvas{display:block;touch-action:none;cursor:crosshair;image-rendering:pixelated;image-rendering:crisp-edges;}
+#bottom-panel{grid-area:panel;background:var(--color-bg);border-top:0.5px solid var(--color-border);padding:8px 10px;padding-bottom:max(8px,env(safe-area-inset-bottom));}
+@media (orientation:landscape){
+  #gc-wrap{grid-template-areas:"canvas top" "canvas panel";grid-template-rows:auto 1fr;grid-template-columns:1fr min(220px,34vw);}
+  #top-bar{flex-wrap:wrap;padding:6px 8px;border-bottom:0.5px solid var(--color-border);border-left:0.5px solid var(--color-border);gap:6px;}
+  #top-bar .stat{font-size:11px;}
+  #top-bar .stat strong{font-size:13px;min-width:0;}
+  #wave-bar-wrap{flex:1 0 100%;}
+  #wave-label{font-size:9px;}
+  #cw{padding-left:env(safe-area-inset-left);}
+  #bottom-panel{border-top:none;border-left:0.5px solid var(--color-border);overflow-y:auto;min-height:0;padding:7px 8px;padding-right:max(8px,env(safe-area-inset-right));padding-bottom:max(7px,env(safe-area-inset-bottom));}
+  #ip{padding:7px;gap:5px;margin-bottom:6px;}
+  #ip-grid{grid-template-columns:1fr 1fr;gap:2px 8px;}
+  #ip-acts{gap:5px;}
+  #upbtn,#sellbtn{padding:7px;font-size:11px;}
+  #wb{padding:8px;font-size:12px;margin-bottom:6px;}
+  #tp{flex-wrap:wrap;overflow-x:visible;gap:5px;}
+  .tbtn{flex:1 1 calc(33.333% - 4px);min-width:0;padding:5px 4px;}
+  .tbtn .te{font-size:16px;}
+}
 #ip{display:none;flex-direction:column;gap:6px;background:var(--color-bg2);border:0.5px solid var(--color-border);border-radius:var(--radius);padding:9px;margin-bottom:7px;}
 #ip.vis{display:flex;}
 #ip-head{display:flex;align-items:center;justify-content:space-between;}
@@ -415,7 +433,21 @@ function setMsg(t){document.getElementById('msg').textContent=t;}
 function gameOver(){S.over=true;cancelAnimationFrame(S.anim);draw();document.getElementById('go-title').textContent='Game Over';document.getElementById('gos').textContent=`Wave ${S.wave} · ${S.kills}킬`;document.getElementById('go').style.display='flex';}
 function victory(){S.over=true;cancelAnimationFrame(S.anim);draw();document.getElementById('go-title').textContent='🏆 클리어!';document.getElementById('gos').textContent=`20웨이브 완파 · ${S.kills}킬 · ${S.gold}G`;document.getElementById('go').style.display='flex';}
 
-init();updateUI();document.querySelector('.tbtn[data-type="arrow"]').classList.add('sel');setMsg('타워를 선택하고 캔버스를 탭해서 설치하세요!');draw();S.anim=requestAnimationFrame(loop);
+function resizeCanvas(){
+  const wrap=document.getElementById('cw');
+  const aw=wrap.clientWidth,ah=wrap.clientHeight;
+  if(aw<=0||ah<=0)return;
+  const ar=W/H;
+  let cw,ch;
+  if(aw/ah>ar){ch=ah;cw=ah*ar;}else{cw=aw;ch=aw/ar;}
+  canvas.style.width=cw+'px';
+  canvas.style.height=ch+'px';
+}
+window.addEventListener('resize',resizeCanvas);
+window.addEventListener('orientationchange',()=>setTimeout(resizeCanvas,200));
+if(window.ResizeObserver){const ro=new ResizeObserver(()=>resizeCanvas());ro.observe(document.getElementById('cw'));}
+
+init();updateUI();document.querySelector('.tbtn[data-type="arrow"]').classList.add('sel');setMsg('타워를 선택하고 캔버스를 탭해서 설치하세요!');resizeCanvas();draw();S.anim=requestAnimationFrame(loop);
 </script>
 </body>
 </html>
