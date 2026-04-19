@@ -1,4 +1,11 @@
-
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>타워 디펜스</title>
+</head>
+<body>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;}
 #gc-wrap{font-family:var(--font-sans);user-select:none;}
@@ -331,3 +338,5 @@ function gameOver(){S.over=true;cancelAnimationFrame(S.anim);draw();document.get
 function victory(){S.over=true;cancelAnimationFrame(S.anim);draw();document.getElementById('go-title').textContent='🏆 클리어!';document.getElementById('gos').textContent=`20웨이브 완파 · ${S.kills}킬 · ${S.gold}G`;document.getElementById('go').style.display='flex';}
 init();updateUI();document.querySelector('.tbtn[data-type="arrow"]').classList.add('sel');setMsg('보스 HP 100,000 / 소환사 Lv3+ 골렘 2마리!');draw();S.anim=requestAnimationFrame(loop);
 </script>
+</body>
+</html>
