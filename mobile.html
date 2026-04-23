@@ -74,7 +74,13 @@ canvas{display:block;touch-action:none;cursor:crosshair;image-rendering:pixelate
 #close-ip:active{background:rgba(255,84,112,0.2);color:var(--c-red);}
 .kb{display:none;}
 #msg{font-size:11px;color:var(--c-cyan);min-height:14px;margin-bottom:8px;text-align:center;font-weight:500;letter-spacing:0.02em;text-shadow:0 0 8px rgba(0,217,255,0.3);}
-#wb{width:100%;padding:13px;font-size:14px;font-weight:700;border:none;border-radius:var(--radius);background:var(--grad-cta);color:#fff;cursor:pointer;margin-bottom:9px;letter-spacing:0.04em;box-shadow:0 0 16px rgba(0,217,255,0.45),0 4px 14px rgba(0,0,0,0.4);position:relative;overflow:hidden;transition:transform 0.12s;}
+#wb{width:100%;padding:13px;font-size:14px;font-weight:700;border:none;border-radius:var(--radius);background:var(--grad-cta);color:#fff;cursor:pointer;margin-bottom:6px;letter-spacing:0.04em;box-shadow:0 0 16px rgba(0,217,255,0.45),0 4px 14px rgba(0,0,0,0.4);position:relative;overflow:hidden;transition:transform 0.12s;}
+#wave-row{display:flex;gap:5px;margin-bottom:9px;align-items:stretch;}
+#sk{padding:5px 8px;font-size:11px;font-weight:700;border:1px solid rgba(255,209,102,0.4);border-radius:6px;background:rgba(255,209,102,0.18);color:#FFD166;cursor:pointer;white-space:nowrap;flex-shrink:0;}
+#sk:disabled{opacity:0.35;cursor:not-allowed;}
+#speed-ctrl{display:flex;gap:1px;align-items:center;background:rgba(22,30,52,0.7);border:1px solid var(--border-soft);border-radius:6px;padding:2px;flex:1;justify-content:space-around;min-width:0;}
+.sp-btn{padding:3px 4px;font-size:10px;border:none;border-radius:3px;background:transparent;color:var(--txt-dim);cursor:pointer;font-weight:700;flex:1;min-width:0;}
+.sp-btn.sel{background:var(--c-cyan);color:#000;}
 #wb:not(:disabled){animation:wbPulse 2.4s ease-in-out infinite;}
 #wb:not(:disabled):active{transform:scale(0.98);}
 #wb:disabled{opacity:0.45;background:linear-gradient(135deg,#3a4258 0%,#2a3148 100%);box-shadow:none;cursor:not-allowed;animation:none;}
@@ -207,6 +213,10 @@ canvas{display:block;touch-action:none;cursor:crosshair;image-rendering:pixelate
     </div>
     <div id="msg"></div>
     <button id="wb">🌊 웨이브 시작</button>
+    <div id="wave-row">
+      <button id="sk" title="스킵: 적은 남고 다음 웨이브 시작 가능">⏭ 스킵</button>
+      <div id="speed-ctrl"><button class="sp-btn sel" data-sp="1">1×</button><button class="sp-btn" data-sp="1.5">1.5×</button><button class="sp-btn" data-sp="2">2×</button><button class="sp-btn" data-sp="2.5">2.5×</button><button class="sp-btn" data-sp="3">3×</button></div>
+    </div>
     <div id="tabbar">
       <button class="tab-btn sel" data-tab="towers">⚔ 타워</button>
       <button class="tab-btn" data-tab="tools">🛠 도구</button>
@@ -450,7 +460,7 @@ function mkE(hp,spd,rw,color,kind,ex={}){return{id:Math.random(),pi:0,x:PATH_PTS
 const hpScale=w=>1+w*0.10,spdScale=w=>1+w*0.025,rwScale=w=>Math.round(w*0.25);
 function mkNormal(w,tpl){return mkE(Math.round(165*hpScale(w)),50*spdScale(w),9+rwScale(w),'#BA7517','normal');}
 function mkElite(w,tpl){return mkE(Math.round(380*hpScale(w)),40*spdScale(w),22+rwScale(w),'#534AB7','elite');}
-function mkArmored(w,tpl){return mkE(Math.round(690*hpScale(w)),30*spdScale(w),36+rwScale(w)*2,'#444441','armored');}
+function mkArmored(w,tpl){return mkE(Math.round(350*hpScale(w)),30*spdScale(w),36+rwScale(w)*2,'#444441','armored');}
 function mkSwarm(w,tpl){return mkE(Math.round(32*hpScale(w)),80*spdScale(w),4+rwScale(w),'#EF9F27','swarm');}
 function mkGhost(w,tpl){return mkE(Math.round(1240*hpScale(w)),40*spdScale(w),70+rwScale(w)*2,'#C5B5E0','ghost');}
 function mkWorm(w,tpl){return mkE(Math.round(275*hpScale(w)),40*spdScale(w),32+rwScale(w),'#A05A2C','worm',{burrowed:false,burrowTimer:0,surfDur:2.5+Math.random()*1.0,burrowDur:1.4+Math.random()*0.6});}
@@ -468,13 +478,14 @@ function tickFX(dt){for(const e of S.explosions){if(e.type==='ring')e.life-=dt*(
 function checkWaveComplete(){if(!S.waveActive||!S.spawnDone||S.enemies.length>0)return;if(S.wave===MAX_WAVE){if(S.bossDefeated){victory();}return;}S.waveActive=false;const bonus=waveBonus(S.wave);S.gold+=bonus;updateUI();wbBtn.disabled=false;showWaveBanner(S.wave,bonus);sfx('wave_clear',1.0);}
 
 let last=null;
-function loop(ts){if(S.over)return;if(!last)last=ts;const dt=Math.min((ts-last)/1000,0.05);last=ts;tick(dt);draw();S.anim=requestAnimationFrame(loop);}
+let SPEED_MUL=1;
+function loop(ts){if(S.over)return;if(!last)last=ts;const raw=Math.min((ts-last)/1000,0.05);last=ts;const steps=Math.max(1,Math.ceil(SPEED_MUL));const sub=(raw*SPEED_MUL)/steps;for(let i=0;i<steps;i++)tick(sub);draw();S.anim=requestAnimationFrame(loop);}
 function moveAlong(obj,path,spd,dt){let rem=spd*dt;while(rem>0&&obj.pi<path.length-1){const n=path[obj.pi+1],d=dst(obj,n);if(rem>=d){rem-=d;obj.x=n.x;obj.y=n.y;obj.pi++;}else{const r=rem/d;obj.x+=(n.x-obj.x)*r;obj.y+=(n.y-obj.y)*r;rem=0;}}}
 
 function tick(dt){
   S.screenShake=Math.max(0,S.screenShake-dt*3);
   if(S.sandbox){S.gold=9999999;S.hp=Math.max(S.hp,9999);}
-  if(S.waveActive){S.st+=dt;let done=true;for(const s of S.sq){if(!s.done){done=false;if(S.st>=s.d){s.done=true;S.enemies.push(s.mk());}}}if(done)S.spawnDone=true;}
+  if(S.sq&&S.sq.length){S.st+=dt;let done=true;for(const s of S.sq){if(!s.done){done=false;if(S.st>=s.d){s.done=true;S.enemies.push(s.mk());}}}if(done)S.spawnDone=true;}
   for(const t of S.towers){
     if(t.type!=='summoner')continue;
     const st=tStats('summoner',t.lv);
@@ -723,7 +734,7 @@ document.getElementById('close-ip').addEventListener('click',()=>{S.sel=null;doc
 
 wbBtn.addEventListener('click',()=>{
   if(S.waveActive||S.over||S.wave>=MAX_WAVE)return;
-  S.wave++;S.sq=mkQueue(S.wave);S.st=0;S.spawnDone=false;S.waveActive=true;S.bossDefeated=false;wbBtn.disabled=true;sfx('wave_start',0.7);
+  S.wave++;const newQ=mkQueue(S.wave);const remaining=(S.sq||[]).filter(s=>!s.done);if(remaining.length){newQ.forEach(s=>s.d+=S.st+0.3);S.sq=remaining.concat(newQ);}else{S.sq=newQ;S.st=0;}S.spawnDone=false;S.waveActive=true;S.bossDefeated=false;wbBtn.disabled=true;sfx('wave_start',0.7);
   showWaveBanner(S.wave);
   if(S.wave===MAX_WAVE){bossRoar(W/2,H/2,true);}
 });
@@ -759,6 +770,8 @@ document.getElementById('mute-btn').addEventListener('click',function(){muted=!m
 
 setMsg('스프라이트 로딩 중...');
 function startGame(sandbox){document.getElementById('start-screen').style.display='none';init(sandbox);updateUI();document.querySelector('.tbtn[data-type="arrow"]').classList.add('sel');setMsg(sandbox?'🎮 샌드박스 모드 — 자유롭게 실험!':'타워를 선택하고 캔버스를 탭해서 설치하세요!');draw();S.anim=requestAnimationFrame(loop);}
+document.querySelectorAll('.sp-btn').forEach(b=>{b.addEventListener('click',()=>{document.querySelectorAll('.sp-btn').forEach(x=>x.classList.remove('sel'));b.classList.add('sel');SPEED_MUL=parseFloat(b.dataset.sp);});});
+document.getElementById('sk').addEventListener('click',()=>{if(!S||!S.waveActive)return;S.waveActive=false;wbBtn.disabled=false;const bonus=Math.floor(waveBonus(S.wave)*0.5);S.gold+=bonus;setMsg(`웨이브 ${S.wave} 스킵 (보상 절반 +${bonus}G) — 다음 웨이브 시작 가능`);updateUI();sfx('wave_clear',0.6);});
 loadSprites().then(()=>{loadSFX();resizeCanvas();ctx.imageSmoothingEnabled=true;ctx.imageSmoothingQuality='high';document.getElementById('mode-normal').addEventListener('click',()=>startGame(false));document.getElementById('mode-sandbox').addEventListener('click',()=>startGame(true));document.getElementById('sb-wave-prev').addEventListener('click',()=>{if(S&&!S.waveActive&&S.wave>0){S.wave--;updateUI();}});document.getElementById('sb-wave-next').addEventListener('click',()=>{if(S&&!S.waveActive&&S.wave<MAX_WAVE-1){S.wave++;updateUI();}});});
 </script>
 </body>
