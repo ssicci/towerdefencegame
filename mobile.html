@@ -4,6 +4,15 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <title>타워 디펜스</title>
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
+import { getDatabase, ref, set, get, onValue, remove, push, child, onDisconnect, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-database.js";
+const firebaseConfig={apiKey:"AIzaSyC1nwlK9XVnbJt0kmMbbHuQ7CtlDV8dMKY",authDomain:"tower-defence-multi.firebaseapp.com",databaseURL:"https://tower-defence-multi-default-rtdb.asia-southeast1.firebasedatabase.app",projectId:"tower-defence-multi",storageBucket:"tower-defence-multi.firebasestorage.app",messagingSenderId:"1086634820078",appId:"1:1086634820078:web:7876f2129977b5a0f44eff"};
+const app=initializeApp(firebaseConfig);
+const fbdb=getDatabase(app);
+window.FB={db:fbdb,ref,set,get,onValue,remove,push,child,onDisconnect,serverTimestamp,connected:true};
+console.log('🔥 Firebase 연결됨');
+</script>
 </head>
 <body>
 <style>
@@ -140,6 +149,17 @@ canvas{display:block;touch-action:none;cursor:crosshair;image-rendering:pixelate
 .ss-btn:hover{background:rgba(36,48,80,0.8);}
 .ss-btn.sel{border-color:var(--c-cyan);background:rgba(0,217,255,0.2);color:#fff;box-shadow:0 0 8px rgba(0,217,255,0.3);}
 .ss-btn.sandbox.sel{border-color:#FFD166;background:rgba(255,209,102,0.22);color:#FFD166;box-shadow:0 0 8px rgba(255,209,102,0.3);}
+.ss-btn.multi.sel{border-color:#5DCEA5;background:rgba(93,206,165,0.22);color:#5DCEA5;box-shadow:0 0 8px rgba(93,206,165,0.3);}
+#room-screen{position:absolute;inset:0;display:none;align-items:center;justify-content:center;background:rgba(4,8,18,0.96);backdrop-filter:blur(8px);z-index:101;}
+#room-screen.show{display:flex;}
+.room-card{background:linear-gradient(180deg,rgba(36,48,80,0.85),rgba(22,30,52,0.92));border:1px solid #5DCEA5;border-radius:14px;padding:22px;max-width:320px;width:90%;box-shadow:0 0 30px rgba(93,206,165,0.25);}
+.room-card h2{margin:0 0 12px;font-size:18px;color:#5DCEA5;text-align:center;}
+.room-card .rinp{width:100%;padding:10px;margin:6px 0;border:1px solid var(--border-soft);border-radius:7px;background:rgba(0,0,0,0.3);color:#fff;font-size:16px;text-align:center;letter-spacing:0.2em;font-weight:700;text-transform:uppercase;box-sizing:border-box;}
+.room-card .rbtn{width:100%;padding:10px;margin:6px 0;border:1px solid #5DCEA5;border-radius:7px;background:rgba(93,206,165,0.15);color:#fff;font-size:13px;font-weight:700;cursor:pointer;}
+.room-card .rbtn:hover{background:rgba(93,206,165,0.3);}
+.room-card .rbtn.cancel{border-color:rgba(180,180,180,0.4);background:rgba(60,60,80,0.4);color:var(--txt-dim);}
+#room-status{margin-top:10px;padding:8px;text-align:center;font-size:12px;color:#5DCEA5;background:rgba(93,206,165,0.1);border-radius:6px;min-height:14px;}
+#room-id-display{font-size:24px;font-weight:700;color:#FFD166;letter-spacing:0.3em;text-align:center;padding:12px;background:rgba(0,0,0,0.4);border-radius:8px;margin:10px 0;border:1px dashed #FFD166;}
 .ss-btn.hard.sel{border-color:#E24B4A;background:rgba(226,75,74,0.22);color:#FF8080;box-shadow:0 0 8px rgba(226,75,74,0.3);}
 .start-go{width:100%;margin-top:12px;padding:13px;border:none;border-radius:8px;background:linear-gradient(180deg,rgba(0,217,255,0.45),rgba(0,140,200,0.55));color:#fff;font-size:15px;font-weight:700;cursor:pointer;letter-spacing:0.05em;box-shadow:0 0 14px rgba(0,217,255,0.4);transition:transform 0.1s;}
 .start-go:hover{transform:scale(1.02);}
@@ -204,6 +224,28 @@ canvas{display:block;touch-action:none;cursor:crosshair;image-rendering:pixelate
     <div id="wave-alert"></div>
     <div id="wave-banner"></div>
     <div id="go"><h2 id="go-title">Game Over</h2><p id="gos"></p><button id="rbtn">새 맵으로 시작</button></div>
+    <div id="room-screen">
+      <div class="room-card">
+        <h2>🌐 멀티플레이</h2>
+        <div id="room-menu">
+          <button class="rbtn" id="r-create">방 만들기</button>
+          <button class="rbtn" id="r-join-show">방 참가하기</button>
+          <button class="rbtn cancel" id="r-cancel">← 돌아가기</button>
+        </div>
+        <div id="room-create-view" style="display:none;">
+          <p style="text-align:center;font-size:11px;color:var(--txt-dim);margin:0;">아래 코드를 친구에게 알려주세요</p>
+          <div id="room-id-display">------</div>
+          <button class="rbtn cancel" id="r-leave">방 나가기</button>
+        </div>
+        <div id="room-join-view" style="display:none;">
+          <p style="text-align:center;font-size:11px;color:var(--txt-dim);margin:0;">친구에게 받은 6자리 코드를 입력하세요</p>
+          <input class="rinp" id="r-code-input" maxlength="6" placeholder="ABCDEF"/>
+          <button class="rbtn" id="r-join-go">참가</button>
+          <button class="rbtn cancel" id="r-join-back">← 뒤로</button>
+        </div>
+        <div id="room-status"></div>
+      </div>
+    </div>
     <div id="start-screen">
       <div class="start-card">
         <h1>🏰 타워 디펜스</h1>
@@ -212,6 +254,7 @@ canvas{display:block;touch-action:none;cursor:crosshair;image-rendering:pixelate
           <div class="ss-row">
             <button class="ss-btn sel" data-mode="normal">⚔ 일반</button>
             <button class="ss-btn sandbox" data-mode="sandbox">🎮 샌드박스</button>
+            <button class="ss-btn multi" data-mode="multi">🌐 멀티</button>
           </div>
         </div>
         <div class="ss-section">
@@ -840,7 +883,19 @@ setMsg('스프라이트 로딩 중...');
 function startGame(sandbox,diff){document.getElementById('start-screen').style.display='none';init(sandbox,diff);updateUI();document.querySelector('.tbtn[data-type="arrow"]').classList.add('sel');const lbl=(sandbox?'🎮 샌드박스':'⚔ 일반')+' / '+(diff==='hard'?'🔥 어려움':'🌱 쉬움');setMsg(lbl+' — 시작!');draw();S.anim=requestAnimationFrame(loop);}
 document.querySelectorAll('.sp-btn').forEach(b=>{b.addEventListener('click',()=>{document.querySelectorAll('.sp-btn').forEach(x=>x.classList.remove('sel'));b.classList.add('sel');SPEED_MUL=parseFloat(b.dataset.sp);});});
 document.getElementById('sk').addEventListener('click',()=>{if(!S||!S.waveActive)return;S.waveActive=false;wbBtn.disabled=false;const bonus=Math.floor(waveBonus(S.wave)*0.5);S.gold+=bonus;setMsg(`웨이브 ${S.wave} 스킵 (보상 절반 +${bonus}G) — 다음 웨이브 시작 가능`);updateUI();sfx('wave_clear',0.6);});
-loadSprites().then(()=>{loadSFX();resizeCanvas();ctx.imageSmoothingEnabled=true;ctx.imageSmoothingQuality='high';let _selMode='normal',_selDiff='easy';document.querySelectorAll('.ss-btn[data-mode]').forEach(b=>{b.addEventListener('click',()=>{document.querySelectorAll('.ss-btn[data-mode]').forEach(x=>x.classList.remove('sel'));b.classList.add('sel');_selMode=b.dataset.mode;});});document.querySelectorAll('.ss-btn[data-diff]').forEach(b=>{b.addEventListener('click',()=>{document.querySelectorAll('.ss-btn[data-diff]').forEach(x=>x.classList.remove('sel'));b.classList.add('sel');_selDiff=b.dataset.diff;});});document.getElementById('start-go').addEventListener('click',()=>startGame(_selMode==='sandbox',_selDiff));document.getElementById('sb-wave-prev').addEventListener('click',()=>{if(S&&!S.waveActive&&S.wave>0){S.wave--;updateUI();}});document.getElementById('sb-wave-next').addEventListener('click',()=>{if(S&&!S.waveActive&&S.wave<MAX_WAVE-1){S.wave++;updateUI();}});document.getElementById('sb-toggle').addEventListener('click',()=>{document.getElementById('sandbox-controls').classList.toggle('collapsed');});});
+loadSprites().then(()=>{loadSFX();resizeCanvas();ctx.imageSmoothingEnabled=true;ctx.imageSmoothingQuality='high';let _selMode='normal',_selDiff='easy';document.querySelectorAll('.ss-btn[data-mode]').forEach(b=>{b.addEventListener('click',()=>{document.querySelectorAll('.ss-btn[data-mode]').forEach(x=>x.classList.remove('sel'));b.classList.add('sel');_selMode=b.dataset.mode;});});document.querySelectorAll('.ss-btn[data-diff]').forEach(b=>{b.addEventListener('click',()=>{document.querySelectorAll('.ss-btn[data-diff]').forEach(x=>x.classList.remove('sel'));b.classList.add('sel');_selDiff=b.dataset.diff;});});document.getElementById('start-go').addEventListener('click',()=>{if(_selMode==='multi'){document.getElementById('start-screen').style.display='none';document.getElementById('room-screen').classList.add('show');}else{startGame(_selMode==='sandbox',_selDiff);}});
+function genRoomCode(){const c='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';let s='';for(let i=0;i<6;i++)s+=c[Math.floor(Math.random()*c.length)];return s;}
+let _roomId=null,_role=null,_roomUnsub=null;
+function setRoomStatus(msg,color){const el=document.getElementById('room-status');el.textContent=msg;el.style.color=color||'#5DCEA5';}
+function showRoomView(name){['room-menu','room-create-view','room-join-view'].forEach(id=>document.getElementById(id).style.display=id===name?'block':'none');}
+async function createRoom(){if(!window.FB){setRoomStatus('Firebase 연결 안됨','#FF8080');return;}_roomId=genRoomCode();_role='p1';const seed=Math.floor(Math.random()*1e9);const{db,ref,set,onValue,onDisconnect}=window.FB;await set(ref(db,'rooms/'+_roomId),{seed,createdAt:Date.now(),p1:{joined:true,hp:20},p2:{joined:false}});onDisconnect(ref(db,'rooms/'+_roomId+'/p1/joined')).set(false);document.getElementById('room-id-display').textContent=_roomId;showRoomView('room-create-view');setRoomStatus('상대방 대기 중...');_roomUnsub=onValue(ref(db,'rooms/'+_roomId+'/p2/joined'),snap=>{if(snap.val()===true){setRoomStatus('상대방 입장! 곧 시작합니다','#5DFFB4');setTimeout(()=>{document.getElementById('room-screen').classList.remove('show');startGame(false,_selDiff);},1500);}});}
+async function joinRoom(){const code=document.getElementById('r-code-input').value.trim().toUpperCase();if(code.length!==6){setRoomStatus('6자리 코드를 입력하세요','#FF8080');return;}if(!window.FB){setRoomStatus('Firebase 연결 안됨','#FF8080');return;}const{db,ref,get,set,onDisconnect}=window.FB;const snap=await get(ref(db,'rooms/'+code));if(!snap.exists()){setRoomStatus('방을 찾을 수 없습니다','#FF8080');return;}const data=snap.val();if(data.p2&&data.p2.joined){setRoomStatus('방이 가득 찼습니다','#FF8080');return;}_roomId=code;_role='p2';await set(ref(db,'rooms/'+code+'/p2'),{joined:true,hp:20});onDisconnect(ref(db,'rooms/'+code+'/p2/joined')).set(false);setRoomStatus('연결됨! 곧 시작합니다','#5DFFB4');setTimeout(()=>{document.getElementById('room-screen').classList.remove('show');startGame(false,_selDiff);},1500);}
+document.getElementById('r-create').addEventListener('click',createRoom);
+document.getElementById('r-join-show').addEventListener('click',()=>{showRoomView('room-join-view');setRoomStatus('');});
+document.getElementById('r-join-go').addEventListener('click',joinRoom);
+document.getElementById('r-join-back').addEventListener('click',()=>{showRoomView('room-menu');setRoomStatus('');});
+document.getElementById('r-cancel').addEventListener('click',()=>{document.getElementById('room-screen').classList.remove('show');document.getElementById('start-screen').style.display='flex';showRoomView('room-menu');setRoomStatus('');});
+document.getElementById('r-leave').addEventListener('click',async()=>{if(_roomUnsub){_roomUnsub();_roomUnsub=null;}if(_roomId&&window.FB){await window.FB.remove(window.FB.ref(window.FB.db,'rooms/'+_roomId));}_roomId=null;_role=null;showRoomView('room-menu');setRoomStatus('');});document.getElementById('sb-wave-prev').addEventListener('click',()=>{if(S&&!S.waveActive&&S.wave>0){S.wave--;updateUI();}});document.getElementById('sb-wave-next').addEventListener('click',()=>{if(S&&!S.waveActive&&S.wave<MAX_WAVE-1){S.wave++;updateUI();}});document.getElementById('sb-toggle').addEventListener('click',()=>{document.getElementById('sandbox-controls').classList.toggle('collapsed');});});
 </script>
 </body>
 </html>
