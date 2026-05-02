@@ -5,7 +5,13 @@
       "PowerShell(git -C \"c:\\\\dev\\\\towerdefence\" remote add origin https://github.com/ssicci/towerdefencegame.git 2>&1)",
       "PowerShell(git -C \"c:\\\\dev\\\\towerdefence\" pull origin main 2>&1)",
       "Bash(Get-ChildItem -Path \"c:\\\\dev\\\\towerdefence\" -File)",
-      "Bash(Select-Object Name)"
+      "Bash(Select-Object Name)",
+      "Bash(git add *)",
+      "Bash(git commit *)",
+      "Bash(git config *)",
+      "Bash(git push *)",
+      "Bash(powershell -Command \"Select-String -Path 'c:\\\\dev\\\\towerdefence\\\\mobile.html' -Pattern '^function startGame' | Select-Object -First 1\")",
+      "Bash(powershell -Command \"Select-String -Path 'c:\\\\dev\\\\towerdefence\\\\mobile.html' -Pattern 'function checkWaveComplete' | Select-Object -First 1\")"
     ]
   }
 }
