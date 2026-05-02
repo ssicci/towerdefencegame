@@ -11,7 +11,8 @@
       "Bash(git config *)",
       "Bash(git push *)",
       "Bash(powershell -Command \"Select-String -Path 'c:\\\\dev\\\\towerdefence\\\\mobile.html' -Pattern '^function startGame' | Select-Object -First 1\")",
-      "Bash(powershell -Command \"Select-String -Path 'c:\\\\dev\\\\towerdefence\\\\mobile.html' -Pattern 'function checkWaveComplete' | Select-Object -First 1\")"
+      "Bash(powershell -Command \"Select-String -Path 'c:\\\\dev\\\\towerdefence\\\\mobile.html' -Pattern 'function checkWaveComplete' | Select-Object -First 1\")",
+      "PowerShell(Start-Process \"c:\\\\dev\\\\towerdefence\\\\mobile.html\")"
     ]
   }
 }
