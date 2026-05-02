@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "PowerShell(git -C \"c:\\\\dev\\\\towerdefence\" log --oneline -10 2>&1)",
+      "PowerShell(git -C \"c:\\\\dev\\\\towerdefence\" remote add origin https://github.com/ssicci/towerdefencegame.git 2>&1)",
+      "PowerShell(git -C \"c:\\\\dev\\\\towerdefence\" pull origin main 2>&1)",
+      "Bash(Get-ChildItem -Path \"c:\\\\dev\\\\towerdefence\" -File)",
+      "Bash(Select-Object Name)"
+    ]
+  }
+}
