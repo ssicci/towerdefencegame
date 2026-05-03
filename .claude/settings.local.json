@@ -14,7 +14,9 @@
       "Bash(powershell -Command \"Select-String -Path 'c:\\\\dev\\\\towerdefence\\\\mobile.html' -Pattern 'function checkWaveComplete' | Select-Object -First 1\")",
       "PowerShell(Start-Process \"c:\\\\dev\\\\towerdefence\\\\mobile.html\")",
       "Bash(node diag_test.js)",
-      "Bash(node test_game.js)"
+      "Bash(node test_game.js)",
+      "Bash(python -c ' *)",
+      "Bash(dir \"C:\\\\dev\\\\towerdefence\\\\assets\\\\Top-down Tanks\\\\PNG\\\\Default size\" /b)"
     ]
   }
 }
