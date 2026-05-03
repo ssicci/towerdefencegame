@@ -16,7 +16,8 @@
       "Bash(node diag_test.js)",
       "Bash(node test_game.js)",
       "Bash(python -c ' *)",
-      "Bash(dir \"C:\\\\dev\\\\towerdefence\\\\assets\\\\Top-down Tanks\\\\PNG\\\\Default size\" /b)"
+      "Bash(dir \"C:\\\\dev\\\\towerdefence\\\\assets\\\\Top-down Tanks\\\\PNG\\\\Default size\" /b)",
+      "Bash(git restore *)"
     ]
   }
 }

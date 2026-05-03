@@ -24,14 +24,17 @@ console.log('🔥 Firebase 연결됨');
     <div class="stat">🌊 <strong id="wv">0</strong><span id="wv-max">/30</span></div>
     <div class="stat">💀 <strong id="kv">0</strong></div>
     <div id="wave-bar-wrap"><div id="wave-label">웨이브 진행</div><div id="wave-track"><div id="wave-fill" style="width:0%"></div></div></div>
-    <button id="settings-btn" title="설정">⚙</button>
   </div>
   <div id="cw">
     <canvas id="gc"></canvas>
     <div id="tp-stats">
-      <div class="tp-sl">💰 <span id="tp-gv">400</span></div>
-      <div class="tp-sl">🌊 <span id="tp-wv">0</span><span id="tp-wvmax">/30</span></div>
-      <div class="tp-sl" id="tp-effect" style="display:none"></div>
+      <div id="tp-stats-row">
+        <div class="tp-sl">💰 <span id="tp-gv">400</span></div>
+        <div class="tp-sl">🌊 <span id="tp-wv">0</span><span id="tp-wvmax">/30</span></div>
+        <div class="tp-sl" id="tp-effect" style="display:none"></div>
+        <button id="settings-btn" title="설정">⚙</button>
+      </div>
+      <button id="wb" disabled>🌊 웨이브 시작</button>
     </div>
     <div id="ip">
       <div id="ip-head">
@@ -89,7 +92,7 @@ console.log('🔥 Firebase 연결됨');
     <div id="mode-select-screen"><div class="mode-card"><h2>🎲 게임 모드 선택</h2><div class="mode-btns"><button class="mode-btn" id="mode-normal-btn"><div class="mb-title">⚔ 일반</div><div class="mb-desc">기본 타워 디펜스</div></button><button class="mode-btn rlt" id="mode-roulette-btn"><div class="mb-title">🎰 룰렛</div><div class="mb-desc">룰렛으로 특수 조건 결정</div></button></div></div></div>
     <div id="roulette-screen"><div id="roulette-strip-box"><div id="csgo-label">🎰 룰렛</div><div id="csgo-ptr-top">▼</div><div id="csgo-track-outer"><div id="csgo-center"></div><div id="csgo-track"></div></div><div id="csgo-ptr-bot">▲</div><div id="roulette-result"></div></div><button id="roulette-spin-btn" style="display:none"></button></div>
     <div id="settings-panel"><div id="settings-box"><div class="set-title">⚙ 설정<button id="set-close">✕</button></div><div class="set-section"><div class="set-sec-label">UI 크기</div><div class="set-btn-row"><button class="us-btn" data-scale="0.7">작게</button><button class="us-btn sel" data-scale="1">보통</button><button class="us-btn" data-scale="1.25">크게</button><button class="us-btn" data-scale="1.5">매우크게</button></div></div><div class="set-section"><div class="set-sec-label">효과음</div><div class="set-row"><input type="range" id="sfx-vol" min="0" max="100" value="100"><span class="set-vol-val" id="sfx-vol-val">100%</span></div></div><div class="set-section"><div class="set-sec-label">배경음악</div><div class="set-row"><input type="range" id="bgm-vol" min="0" max="100" value="15"><span class="set-vol-val" id="bgm-vol-val">15%</span></div></div></div></div>
-    <div id="mp-hud"><span class="mp-lbl">상대 HP</span><span id="mp-opp-hp">--</span><span style="margin:0 5px;color:rgba(255,255,255,0.25)">|</span><span class="mp-lbl">상대 효과</span><span id="mp-opp-effect" style="font-size:11px;color:rgba(255,255,255,0.55)">-</span></div>
+    <div id="mp-hud"><span id="mp-opp-hp" style="display:none"></span><span id="mp-opp-effect" style="display:none"></span></div>
 
     <div id="mp-chat"><div id="mp-chat-msgs"></div><div id="notify-input"><input id="mp-chat-text" maxlength="80" placeholder="채팅..." autocomplete="off"/><button id="mp-chat-send">▶</button></div></div>
     <div id="mp-mini"><div id="mp-mini-lbl">상대 화면</div><canvas id="mp-mini-canvas" width="272" height="160"></canvas></div>
@@ -183,10 +186,6 @@ console.log('🔥 Firebase 연결됨');
     <div id="wave-row">
       <button id="sk" title="스킵: 적은 남고 다음 웨이브 시작 가능">⏭ 스킵</button>
       <div id="speed-ctrl"><button class="sp-btn sel" data-sp="1">1×</button><button class="sp-btn" data-sp="1.5">1.5×</button><button class="sp-btn" data-sp="2">2×</button><button class="sp-btn" data-sp="2.5">2.5×</button><button class="sp-btn" data-sp="3">3×</button></div>
-    </div>
-    <div id="wb-row">
-      <button id="wb" disabled>🌊 웨이브</button>
-      <button id="wb-settings">⚙</button>
     </div>
     <div id="tp-row">
       <div id="tower-info"><div id="ti-name">설명</div><div id="ti-traits"></div></div>
