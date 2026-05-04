@@ -604,7 +604,7 @@ canvas.addEventListener('touchmove',e=>{
 canvas.addEventListener('touchend',e=>{
   e.preventDefault();
   if(e.touches.length===0){const t=e.changedTouches[0];if(!_tDragging&&_ts){const now=Date.now();if(now-_tLastTap<300){resetCam();}else{handleCanvasClick(t.clientX,t.clientY);}_tLastTap=now;}if(S)S.hc=null;_ts=null;_tp=null;_tDragging=false;_setChatInteract(true);}
-  else if(e.touches.length===1){_tp=null;const t=e.touches[0];_ts={sx:t.clientX,sy:t.clientY,cx0:camX,cy0:camY};_tDragging=false;_setChatInteract(true);}
+  else if(e.touches.length===1){_tp=null;const t=e.touches[0];_ts={sx:t.clientX,sy:t.clientY,cx0:camX,cy0:camY};_tDragging=true;_setChatInteract(true);}
 },{passive:false});
 canvas.addEventListener('touchcancel',()=>{if(S)S.hc=null;_ts=null;_tp=null;_tDragging=false;_setChatInteract(true);});
 function _setChatInteract(on){const el=document.getElementById('mp-chat');if(el)el.style.pointerEvents=on?'':'none';}
