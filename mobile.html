@@ -91,7 +91,7 @@ console.log('🔥 Firebase 연결됨');
       <div id="eip-traits"></div>
     </div>
     <div id="effect-badge"></div>
-    <div id="mode-select-screen"><div class="mode-card"><h2>🎲 게임 설정</h2><div class="diff-btns"><button class="diff-btn sel" data-diff="easy">쉬움</button><button class="diff-btn" data-diff="normal">보통</button><button class="diff-btn" data-diff="challenge">어려움</button></div><div class="mode-btns"><button class="mode-btn" id="mode-normal-btn"><div class="mb-title">⚔ 일반</div><div class="mb-desc">기본 타워 디펜스</div></button><button class="mode-btn rlt" id="mode-roulette-btn"><div class="mb-title">🎰 룰렛</div><div class="mb-desc">룰렛으로 특수 조건 결정</div></button></div><button id="mode-play-btn" disabled>▶ 플레이</button></div></div>
+    <div id="mode-select-screen"><div class="mode-card"><h2>게임 설정</h2><div class="diff-btns"><button class="diff-btn sel" data-diff="easy">쉬움</button><button class="diff-btn" data-diff="normal">보통</button><button class="diff-btn" data-diff="challenge">어려움</button></div><div class="mode-btns"><button class="mode-btn" id="mode-normal-btn"><div class="mb-title">⚔ 일반</div><div class="mb-desc">기본 타워 디펜스</div></button><button class="mode-btn rlt" id="mode-roulette-btn"><div class="mb-title">🎰 룰렛</div><div class="mb-desc">룰렛으로 특수 조건 결정</div></button></div><button id="mode-play-btn" class="wide-banner-btn" disabled>▶ 플레이</button><button id="mode-back-btn" class="wide-banner-btn">← 돌아가기</button></div></div>
     <div id="roulette-screen"><div id="roulette-strip-box"><div id="csgo-label">🎰 룰렛</div><div id="csgo-ptr-top">▼</div><div id="csgo-track-outer"><div id="csgo-center"></div><div id="csgo-track"></div></div><div id="csgo-ptr-bot">▲</div><div id="roulette-result"></div></div><button id="roulette-spin-btn" style="display:none"></button></div>
     <div id="settings-panel"><div id="settings-box"><div class="set-title">⚙ 설정<button id="set-close">✕</button></div><div class="set-section"><div class="set-sec-label">UI 크기</div><div class="set-btn-row"><button class="us-btn" data-scale="0.7">작게</button><button class="us-btn sel" data-scale="1">보통</button><button class="us-btn" data-scale="1.25">크게</button><button class="us-btn" data-scale="1.5">매우크게</button></div></div><div class="set-section"><div class="set-sec-label">효과음</div><div class="set-row"><input type="range" id="sfx-vol" min="0" max="100" value="100"><span class="set-vol-val" id="sfx-vol-val">100%</span></div></div><div class="set-section"><div class="set-sec-label">배경음악</div><div class="set-row"><input type="range" id="bgm-vol" min="0" max="100" value="15"><span class="set-vol-val" id="bgm-vol-val">15%</span></div></div></div></div>
     <div id="mp-hud"><span id="mp-opp-hp" style="display:none"></span><span id="mp-opp-effect" style="display:none"></span></div>
@@ -149,35 +149,36 @@ console.log('🔥 Firebase 연결됨');
       <div class="room-card">
         <h2>🌐 멀티플레이</h2>
         <div id="room-menu">
-          <div style="display:flex;gap:4px;margin-bottom:8px;">
+          <button class="rbtn wide-banner-btn" id="r-create-show">방 만들기</button>
+          <button class="rbtn wide-banner-btn" id="r-join-show">방 참가하기</button>
+          <button class="rbtn wide-banner-btn" id="r-cancel">← 돌아가기</button>
+        </div>
+        <div id="room-create-view" style="display:none;">
+          <div>
             <button class="rbtn sel" id="r-mode-pvp" style="flex:1;margin:0">⚔ PvP</button>
             <button class="rbtn" id="r-mode-coop" style="flex:1;margin:0">🤝 협동</button>
           </div>
           <p style="text-align:center;font-size:11px;color:var(--txt-dim);margin:0 0 4px;">방 이름 입력 (영문/숫자 2~12자)</p>
           <input class="rinp" id="r-custom-code" maxlength="12" placeholder="예: FRIEND" />
-          <button class="rbtn" id="r-create">방 만들기</button>
-          <button class="rbtn" id="r-join-show">방 참가하기</button>
-          <button class="rbtn cancel" id="r-cancel">← 돌아가기</button>
-        </div>
-        <div id="room-create-view" style="display:none;">
-          <p style="text-align:center;font-size:11px;color:var(--txt-dim);margin:0;">아래 코드를 친구에게 알려주세요</p>
-          <div id="room-id-display">------</div>
-          <button class="rbtn cancel" id="r-leave">방 나가기</button>
+          <button class="rbtn wide-banner-btn" id="r-create">방 만들기</button>
+          <button class="rbtn wide-banner-btn" id="r-create-back">← 뒤로</button>
+          <div id="room-id-display" style="display:none;">------</div>
+          <button class="rbtn wide-banner-btn" id="r-leave" style="display:none;">방 나가기</button>
         </div>
         <div id="room-join-view" style="display:none;">
           <p style="text-align:center;font-size:11px;color:var(--txt-dim);margin:0;">친구에게 받은 방 이름/코드 입력</p>
           <input class="rinp" id="r-code-input" maxlength="12" placeholder="ABCDEF"/>
-          <button class="rbtn" id="r-join-go">참가</button>
-          <button class="rbtn cancel" id="r-join-back">← 뒤로</button>
+          <button class="rbtn wide-banner-btn" id="r-join-go">참가</button>
+          <button class="rbtn wide-banner-btn" id="r-join-back">← 뒤로</button>
         </div>
         <div id="room-status"></div>
       </div>
     </div>
     <div id="start-screen">
       <img id="start-title-img" src="assets/title/title.png" alt="title">
-      <button class="start-menu-btn" id="start-solo-btn">솔로플레이</button>
-      <button class="start-menu-btn" id="start-multi-btn">멀티플레이</button>
-      <button class="start-menu-btn" id="start-sandbox-btn">샌드박스</button>
+      <button class="start-menu-btn wide-banner-btn" id="start-solo-btn">솔로플레이</button>
+      <button class="start-menu-btn wide-banner-btn" id="start-multi-btn">멀티플레이</button>
+      <button class="start-menu-btn wide-banner-btn" id="start-sandbox-btn">샌드박스</button>
     </div>
   </div>
   <div id="bottom-panel">
