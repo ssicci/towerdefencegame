@@ -206,7 +206,7 @@ console.log('🔥 Firebase 연결됨');
       <div id="tower-info"><div id="ti-name">설명</div><div id="ti-traits"></div></div>
       <div id="tp">
         <div class="tab-content" data-tab="towers">
-          <button class="tbtn sel" data-type="arrow"><img class="tbtn-img" src="assets/towerDefense_tile249.png"><span class="cost">50G</span></button>
+          <button class="tbtn" data-type="arrow"><img class="tbtn-img" src="assets/towerDefense_tile249.png"><span class="cost">50G</span></button>
           <button class="tbtn" data-type="cannon"><img class="tbtn-img" src="assets/towerDefense_tile250.png"><span class="cost">100G</span></button>
           <button class="tbtn" data-type="ice"><img class="tbtn-img" src="assets/td_tank_blue.png"><span class="cost">80G</span></button>
           <button class="tbtn" data-type="summoner" id="summoner-btn"><img class="tbtn-img" src="assets/td_tank_bigred.png"><span class="limit-badge" id="summoner-badge">0/1</span><span class="cost">400G</span></button>
@@ -221,10 +221,10 @@ console.log('🔥 Firebase 연결됨');
           <button class="tbtn" data-type="stone"><img class="tbtn-img" src="assets/towerDefense_tile135.png"><span class="cost">100G</span></button>
         </div>
         <div class="tab-content hidden" data-tab="research">
-          <button class="tbtn ru-btn" id="r-armor-btn" data-research="armor"><img class="tbtn-img" src="assets/Top-down Tanks/PNG/Default size/tankBody_huge.png"><span class="tl">장갑개발</span><span class="cost" id="r-armor-cost">500G</span><span class="ab"><span id="r-armor-lvtxt">0/5</span></span><span class="ru-lbl">🔬 연구</span></button>
-          <button class="tbtn ru-btn" id="r-engine-btn" data-research="engine"><img class="tbtn-img" src="assets/Top-down Tanks/PNG/Default size/tank_darkLarge.png"><span class="tl">엔진개량</span><span class="cost" id="r-engine-cost">500G</span><span class="ab"><span id="r-engine-lvtxt">0/5</span></span><span class="ru-lbl">🔬 연구</span></button>
-          <button class="tbtn ru-btn" id="r-powder-btn" data-research="powder"><img class="tbtn-img" src="assets/Top-down Tanks/PNG/Default size/bulletRed3.png"><span class="tl">화약정제</span><span class="cost" id="r-powder-cost">500G</span><span class="ab"><span id="r-powder-lvtxt">0/5</span></span><span class="ru-lbl">🔬 연구</span></button>
-          <button class="tbtn ru-btn" id="r-rate-btn" data-research="rate"><img class="tbtn-img" src="assets/Top-down Tanks/PNG/Default size/barrelBlack_top.png"><span class="tl">발사가속</span><span class="cost" id="r-rate-cost">500G</span><span class="ab"><span id="r-rate-lvtxt">0/5</span></span><span class="ru-lbl">🔬 연구</span></button>
+          <button class="tbtn ru-btn" id="r-armor-btn" data-research="armor"><span class="r-img-wrap"><img class="tbtn-img" src="assets/Top-down Tanks/PNG/Default size/tankBody_huge.png"></span><span class="cost" id="r-armor-cost">500G</span><span class="r-overlay-btn">🔬 연구</span><span class="r-lvbadge" id="r-armor-lv">0</span></button>
+          <button class="tbtn ru-btn" id="r-engine-btn" data-research="engine"><span class="r-img-wrap"><img class="tbtn-img" src="assets/Top-down Tanks/PNG/Default size/tank_darkLarge.png"></span><span class="cost" id="r-engine-cost">500G</span><span class="r-overlay-btn">🔬 연구</span><span class="r-lvbadge" id="r-engine-lv">0</span></button>
+          <button class="tbtn ru-btn" id="r-powder-btn" data-research="powder"><span class="r-img-wrap"><img class="tbtn-img" src="assets/Top-down Tanks/PNG/Default size/bulletRed3.png"></span><span class="cost" id="r-powder-cost">500G</span><span class="r-overlay-btn">🔬 연구</span><span class="r-lvbadge" id="r-powder-lv">0</span></button>
+          <button class="tbtn ru-btn" id="r-rate-btn" data-research="rate"><span class="r-img-wrap"><img class="tbtn-img" src="assets/Top-down Tanks/PNG/Default size/barrelBlack_top.png"></span><span class="cost" id="r-rate-cost">500G</span><span class="r-overlay-btn">🔬 연구</span><span class="r-lvbadge" id="r-rate-lv">0</span></button>
         </div>
         <div class="tab-content hidden" data-tab="dex" id="dex-content"></div>
       </div>
