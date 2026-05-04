@@ -17,7 +17,10 @@
       "Bash(node test_game.js)",
       "Bash(python -c ' *)",
       "Bash(dir \"C:\\\\dev\\\\towerdefence\\\\assets\\\\Top-down Tanks\\\\PNG\\\\Default size\" /b)",
-      "Bash(git restore *)"
+      "Bash(git restore *)",
+      "Bash(node --check \"c:\\\\dev\\\\towerdefence\\\\game.js\")",
+      "Bash(echo \"exit: $?\")",
+      "Bash(node diag2.js)"
     ]
   }
 }

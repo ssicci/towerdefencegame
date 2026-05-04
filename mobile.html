@@ -6,11 +6,11 @@
 <title>타워 디펜스</title>
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
-import { getDatabase, ref, set, get, onValue, remove, push, child, onDisconnect, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-database.js";
+import { getDatabase, ref, set, get, onValue, remove, push, child, onDisconnect, serverTimestamp, update } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-database.js";
 const firebaseConfig={apiKey:"AIzaSyC1nwlK9XVnbJt0kmMbbHuQ7CtlDV8dMKY",authDomain:"tower-defence-multi.firebaseapp.com",databaseURL:"https://tower-defence-multi-default-rtdb.asia-southeast1.firebasedatabase.app",projectId:"tower-defence-multi",storageBucket:"tower-defence-multi.firebasestorage.app",messagingSenderId:"1086634820078",appId:"1:1086634820078:web:7876f2129977b5a0f44eff"};
 const app=initializeApp(firebaseConfig);
 const fbdb=getDatabase(app);
-window.FB={db:fbdb,ref,set,get,onValue,remove,push,child,onDisconnect,serverTimestamp,connected:true};
+window.FB={db:fbdb,ref,set,get,onValue,remove,push,child,onDisconnect,serverTimestamp,update,connected:true};
 console.log('🔥 Firebase 연결됨');
 </script>
 <link rel="stylesheet" href="game.css">
@@ -30,11 +30,13 @@ console.log('🔥 Firebase 연결됨');
     <div id="tp-stats">
       <div id="tp-stats-row">
         <div class="tp-sl">💰 <span id="tp-gv">400</span></div>
-        <div class="tp-sl">🌊 <span id="tp-wv">0</span><span id="tp-wvmax">/30</span></div>
-        <div class="tp-sl" id="tp-effect" style="display:none"></div>
+        <button id="wb" disabled>🌊 웨이브 시작</button>
+        <div id="tp-wave-col">
+          <div class="tp-sl">🌊 <span id="tp-wv">0</span><span id="tp-wvmax">/30</span></div>
+          <div class="tp-sl" id="tp-effect" style="display:none"></div>
+        </div>
         <button id="settings-btn" title="설정">⚙</button>
       </div>
-      <button id="wb" disabled>🌊 웨이브 시작</button>
     </div>
     <div id="ip">
       <div id="ip-head">
@@ -98,6 +100,19 @@ console.log('🔥 Firebase 연결됨');
     <div id="mp-mini"><div id="mp-mini-lbl">상대 화면</div><canvas id="mp-mini-canvas" width="272" height="160"></canvas></div>
     <div id="ufl"></div>
     <div id="wave-alert"></div>
+    <div id="resume-ov" style="display:none;position:fixed;inset:0;background:rgba(10,14,28,0.92);flex-direction:column;align-items:center;justify-content:center;z-index:160;color:#fff;gap:18px;text-align:center;padding:24px;">
+      <div style="font-size:36px">🔌</div>
+      <div id="resume-ov-msg" style="font-size:17px;font-weight:700;line-height:1.5;"></div>
+      <div id="resume-waiting-msg" style="font-size:13px;color:#5DFFB4;display:none;">상대방 응답 대기 중...</div>
+      <div style="display:flex;gap:12px;">
+        <button id="resume-yes-btn" style="padding:10px 24px;background:rgba(93,206,165,0.2);border:1px solid #5DCEA5;border-radius:8px;color:#5DFFB4;font-size:15px;font-weight:700;cursor:pointer;">이어서 진행</button>
+        <button id="resume-no-btn" style="padding:10px 24px;background:rgba(255,84,112,0.15);border:1px solid #ff5470;border-radius:8px;color:#ff5470;font-size:15px;font-weight:700;cursor:pointer;">포기</button>
+      </div>
+    </div>
+    <div id="resume-cd-ov" style="display:none;position:fixed;inset:0;background:rgba(10,14,28,0.85);flex-direction:column;align-items:center;justify-content:center;z-index:161;color:#fff;gap:12px;">
+      <div style="font-size:16px;font-weight:700;color:#5DCEA5;">게임 재개</div>
+      <div id="resume-cd-num" style="font-size:90px;font-weight:900;color:#5DFFB4;line-height:1;text-shadow:0 0 30px #5DFFB4;"></div>
+    </div>
     <div id="wave-banner"></div>
     <div id="go"><h2 id="go-title">Game Over</h2><p id="gos"></p><button id="rbtn">새 맵으로 시작</button></div>
     <div id="vote-screen">
