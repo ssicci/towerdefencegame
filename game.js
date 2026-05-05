@@ -716,14 +716,14 @@ function updateGameInfoUI(){
   const el=document.getElementById('game-info');if(!el)return;
   if(!S){el.style.display='none';return;}
   const tags=[];
-  if(S.mp)tags.push({t:'PvP'});
-  else if(S.coop)tags.push({t:'협동'});
-  tags.push({t:_isRouletteMode?'룰렛':'일반'});
-  const diffs={challenge:'어려움',normal:'보통',easy:'쉬움'};
+  if(S.mp)tags.push({t:'⚔ PvP'});
+  else if(S.coop)tags.push({t:'🤝 협동'});
+  tags.push({t:_isRouletteMode?'🎰 룰렛':'🎮 일반'});
+  const diffs={challenge:'⚡ 어려움',normal:'🔥 보통',easy:'🌱 쉬움'};
   tags.push({t:diffs[S.diff]||S.diff});
-  if(_waitingForOpponent)tags.push({t:'상대방대기',cls:'gi-wait'});
-  else if(S.wave===0&&!S.waveActive)tags.push({t:'대기'});
-  else tags.push({t:'진행중'});
+  if(_waitingForOpponent)tags.push({t:'⏳ 상대방대기',cls:'gi-wait'});
+  else if(S.wave===0&&!S.waveActive)tags.push({t:'🎯 대기'});
+  else tags.push({t:'▶ 진행중'});
   el.style.display='flex';
   el.innerHTML=tags.map(({t,cls})=>`<span class="gi-tag${cls?' '+cls:''}">${t}</span>`).join('');
 }
