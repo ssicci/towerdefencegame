@@ -37,6 +37,7 @@ console.log('🔥 Firebase 연결됨');
         </div>
         <button id="settings-btn" title="설정">⚙</button>
       </div>
+      <div id="game-info"></div>
       <div id="sandbox-controls"><button id="sb-toggle" title="펼치기/접기">🎮</button><div id="sb-inner">SANDBOX <button id="sb-wave-prev">◀</button><span id="sb-wave">W1</span><button id="sb-wave-next">▶</button></div></div>
     </div>
     <div id="ip">
@@ -91,9 +92,9 @@ console.log('🔥 Firebase 연결됨');
       <div id="eip-traits"></div>
     </div>
     <div id="effect-badge"></div>
-    <div id="mode-select-screen"><div class="mode-card"><h2>게임 설정</h2><div class="diff-btns"><button class="diff-btn sel" data-diff="easy">쉬움</button><button class="diff-btn" data-diff="normal">보통</button><button class="diff-btn" data-diff="challenge">어려움</button></div><div class="mode-btns"><button class="mode-btn" id="mode-normal-btn"><div class="mb-title">⚔ 일반</div><div class="mb-desc">기본 타워 디펜스</div></button><button class="mode-btn rlt" id="mode-roulette-btn"><div class="mb-title">🎰 룰렛</div><div class="mb-desc">룰렛으로 특수 조건 결정</div></button></div><button id="mode-play-btn" class="wide-banner-btn" disabled>▶ 플레이</button><button id="mode-back-btn" class="wide-banner-btn">← 돌아가기</button></div></div>
+    <div id="mode-select-screen"><div class="mode-card"><h2>게임 설정</h2><div id="guest-mode-label">🌐 호스트가 설정 중입니다...</div><div class="diff-btns"><button class="diff-btn sel" data-diff="easy">쉬움</button><button class="diff-btn" data-diff="normal">보통</button><button class="diff-btn" data-diff="challenge">어려움</button></div><div class="mode-btns"><button class="mode-btn" id="mode-normal-btn"><div class="mb-title">⚔ 일반</div><div class="mb-desc">기본 타워 디펜스</div></button><button class="mode-btn rlt" id="mode-roulette-btn"><div class="mb-title">🎰 룰렛</div><div class="mb-desc">룰렛으로 특수 조건 결정</div></button></div><div class="auto-wave-row"><span>웨이브 자동 진행</span><button class="toggle-btn" id="auto-wave-toggle">OFF</button></div><div class="auto-wave-row"><span>게임 배속 <span id="sp-val">1.0×</span></span><input type="range" id="sp-slider" min="5" max="25" step="1" value="10" style="flex:1;max-width:120px;accent-color:var(--c-cyan);"></div><button id="mode-play-btn" class="wide-banner-btn" disabled>▶ 플레이</button><button id="mode-back-btn" class="wide-banner-btn">← 돌아가기</button></div></div>
     <div id="roulette-screen"><div id="roulette-strip-box"><div id="csgo-label">🎰 룰렛</div><div id="csgo-ptr-top">▼</div><div id="csgo-track-outer"><div id="csgo-center"></div><div id="csgo-track"></div></div><div id="csgo-ptr-bot">▲</div><div id="roulette-result"></div></div><button id="roulette-spin-btn" style="display:none"></button></div>
-    <div id="settings-panel"><div id="settings-box"><div class="set-title">⚙ 설정<button id="set-close">✕</button></div><div class="set-section"><div class="set-sec-label">UI 크기</div><div class="set-btn-row"><button class="us-btn" data-scale="0.7">작게</button><button class="us-btn sel" data-scale="1">보통</button><button class="us-btn" data-scale="1.25">크게</button><button class="us-btn" data-scale="1.5">매우크게</button></div></div><div class="set-section"><div class="set-sec-label">효과음</div><div class="set-row"><input type="range" id="sfx-vol" min="0" max="100" value="100"><span class="set-vol-val" id="sfx-vol-val">100%</span></div></div><div class="set-section"><div class="set-sec-label">배경음악</div><div class="set-row"><input type="range" id="bgm-vol" min="0" max="100" value="15"><span class="set-vol-val" id="bgm-vol-val">15%</span></div></div></div></div>
+    <div id="settings-panel"><div id="settings-box"><div class="set-title">⚙ 설정<button id="set-close">✕</button></div><div class="set-section"><div class="set-sec-label">UI 크기</div><div class="set-btn-row"><button class="us-btn" data-scale="0.7">작게</button><button class="us-btn sel" data-scale="1">보통</button><button class="us-btn" data-scale="1.25">크게</button><button class="us-btn" data-scale="1.5">매우크게</button></div></div><div class="set-section"><div class="set-sec-label">효과음</div><div class="set-row"><input type="range" id="sfx-vol" min="0" max="100" value="100"><span class="set-vol-val" id="sfx-vol-val">100%</span></div></div><div class="set-section"><div class="set-sec-label">배경음악</div><div class="set-row"><input type="range" id="bgm-vol" min="0" max="100" value="15"><span class="set-vol-val" id="bgm-vol-val">15%</span></div></div><div class="set-section"><div class="set-sec-label">게임 배속</div><div class="set-row"><input type="range" id="sp-slider-ig" min="5" max="25" step="1" value="10"><span class="set-vol-val" id="sp-val-ig">1.0×</span></div></div></div></div>
     <div id="mp-hud"><span id="mp-opp-hp" style="display:none"></span><span id="mp-opp-effect" style="display:none"></span></div>
 
     <div id="mp-chat"><div id="mp-chat-msgs"></div><div id="notify-input"><input id="mp-chat-text" maxlength="80" placeholder="채팅..." autocomplete="off"/><button id="mp-chat-send">▶</button></div></div>
@@ -185,7 +186,6 @@ console.log('🔥 Firebase 연결됨');
     <div id="msg"></div>
     <div id="wave-row">
       <button id="sk" title="스킵: 적은 남고 다음 웨이브 시작 가능">⏭ 스킵</button>
-      <div id="speed-ctrl"><button class="sp-btn sel" data-sp="1">1×</button><button class="sp-btn" data-sp="1.5">1.5×</button><button class="sp-btn" data-sp="2">2×</button><button class="sp-btn" data-sp="2.5">2.5×</button><button class="sp-btn" data-sp="3">3×</button></div>
     </div>
     <div id="tp-row">
       <div id="tower-info"><div id="ti-name">설명</div><div id="ti-traits"></div></div>
