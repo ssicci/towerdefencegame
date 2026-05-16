@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(awk 'NR==884' c:/Users/HOME/Documents/towerdefence/towerdefencegame/game.js)",
+      "Bash(awk 'NR==462' c:/Users/HOME/Documents/towerdefence/towerdefencegame/game.js)"
+    ]
+  }
+}

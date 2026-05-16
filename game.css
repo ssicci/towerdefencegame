@@ -201,12 +201,27 @@ canvas{display:block;touch-action:none;cursor:crosshair;image-rendering:pixelate
 #mode-select-screen.guest-mode #guest-mode-label{display:block;}
 #mode-select-screen.guest-mode .diff-btn,
 #mode-select-screen.guest-mode #sp-slider,
-#mode-select-screen.guest-mode #auto-wave-toggle{pointer-events:none;}
+#mode-select-screen.guest-mode #auto-wave-toggle,
+#mode-select-screen.guest-mode #event-toggle{pointer-events:none;}
 #mode-select-screen.guest-mode #mode-play-btn,
 #mode-select-screen.guest-mode #mode-back-btn{display:none;}
 
-#effect-badge{display:none !important;}
+#effect-badge{display:none;position:absolute;top:10px;right:10px;z-index:35;background:rgba(22,30,52,0.92);border:1px solid rgba(255,255,255,0.2);border-radius:8px;padding:6px 10px;color:#fff;font-size:12px;font-weight:700;line-height:1.2;text-align:right;pointer-events:none;}
+#effect-badge.show{display:block;}
 #effect-badge .eb-remaining{font-size:10px;font-weight:400;color:rgba(255,255,255,0.55);margin-left:2px;}
+#roulette-screen{position:fixed;inset:0;z-index:230;display:none;flex-direction:column;align-items:center;justify-content:center;background:rgba(10,14,28,0.55);}
+#roulette-screen.show{display:flex;}
+#roulette-strip-box{display:flex;flex-direction:column;align-items:center;gap:8px;padding:12px 16px 14px;background:rgba(0,0,0,0.7);border-radius:12px;width:fit-content;pointer-events:none;}
+#csgo-label{font-size:12px;font-weight:700;color:rgba(255,255,255,0.7);letter-spacing:0.12em;text-transform:uppercase;}
+#csgo-ptr-top,#csgo-ptr-bot{font-size:18px;color:#FFD166;line-height:1;text-shadow:0 0 10px rgba(255,209,102,0.9);}
+#csgo-track-outer{position:relative;width:min(480px,96vw);overflow:hidden;border-radius:6px;border:1px solid rgba(255,255,255,0.08);}
+#csgo-center{position:absolute;top:0;bottom:0;left:50%;width:3px;background:rgba(255,209,102,0.95);transform:translateX(-50%);z-index:2;box-shadow:0 0 12px rgba(255,209,102,0.8),0 0 4px #fff;}
+#csgo-track{display:flex;gap:5px;padding:5px;will-change:transform;}
+.csgo-item{flex-shrink:0;width:80px;height:90px;border-radius:6px;border:2px solid rgba(255,255,255,0.12);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;}
+.csgo-item .ci-emoji{font-size:26px;line-height:1;}
+.csgo-item .ci-name{font-size:11px;font-weight:700;color:#fff;text-align:center;line-height:1.2;}
+.csgo-item.winner{border-color:#FFD166!important;box-shadow:0 0 18px rgba(255,209,102,0.9),inset 0 0 12px rgba(255,209,102,0.15);}
+#roulette-result{font-size:14px;font-weight:700;color:#FFD166;min-height:18px;text-align:center;}
 .mode-card{background:none;border:none;border-radius:0;padding:60px 50px;text-align:center;width:min(360px,92vw);aspect-ratio:1;display:flex;flex-direction:column;justify-content:center;box-sizing:border-box;}
 .mode-card h2{margin:0 0 18px;font-size:18px;color:#fff;font-weight:700;}
 .diff-btns{display:flex;gap:8px;justify-content:center;margin-bottom:16px;width:100%;}
